@@ -1,0 +1,91 @@
+﻿@page "/versions"
+
+<style>
+    .error {
+        color: red
+    }
+</style>
+
+<h1>Version Finder</h1>
+
+<p>Welcome to version finder.</p>
+<p>Please enter your version number.</p>
+<input placeholder="1.0.0" @bind="rawInput" />
+<button @onclick="Search">Search</button>
+
+@if (error)
+{
+    <p class="error">The entered version was invalid. Please enter versions in the format {major}.{minor}.{patch} using only whole numbers and periods.</p>
+}
+@if (emptyError)
+{
+    <p class="error">No version entered.</p>
+}
+
+<ul>
+    @foreach (var software in softwareToDisplay)
+    {
+        <li>
+            <input @bind="software.Name" />
+            <input @bind="software.Version" />
+        </li>
+    }
+</ul>
+
+@code {
+    private IList<BlazorApp.Data.Software> softwareToDisplay = new List<BlazorApp.Data.Software>();
+    private string rawInput;
+    private int major = 0;
+    private int minor = 0;
+    private int patch = 0;
+    private bool error = false;
+    private bool emptyError = false;
+
+    private void Search()
+    {
+        error = false;
+        emptyError = false;
+        major = 0;
+        minor = 0;
+        patch = 0;
+        softwareToDisplay.Clear();
+
+
+        var versions = rawInput == null ? new string[0] : rawInput.Split('.');
+
+        var length = versions.Count();
+
+        if (length == 0)
+        {
+            emptyError = true;
+        }
+
+        if (length >= 3)
+        {
+            if (!int.TryParse(versions[2], out patch)) error = true;
+        }
+
+        if (length >= 2)
+        {
+
+            if (!int.TryParse(versions[1], out minor)) error = true;
+        }
+
+        if (length >= 1)
+        {
+
+            if (!int.TryParse(versions[0], out major)) error = true;
+        }
+
+        if (!error && !emptyError)
+        {
+
+            var helper = new BlazorApp.Services.VersionHelper();
+
+            foreach (var software in helper.GetSoftwareNewerThan(major, minor, patch))
+            {
+                softwareToDisplay.Add(software);
+            }
+        }
+    }
+}

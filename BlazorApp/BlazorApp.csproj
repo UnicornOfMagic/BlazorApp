@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web" ToolsVersion="Current">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>C:\Users\Jayte\projects\BlazorApp\Backup1\</UpgradeBackupLocation>
+    <OldToolsVersion>Current</OldToolsVersion>
+    <UserSecretsId>58a509c5-f18c-46dd-a22a-3e0dba7d588a</UserSecretsId>
+  </PropertyGroup>
+</Project>
